@@ -24,12 +24,46 @@ def main():
     for bamfile in options.bamfiles:
         process_bamfile(Path(bamfile),quantitations)
 
-    breakpoint()
-
     write_output(quantitations)
+
+def write_output(quantitations):
+
+    print("Writing output to ",options.outfile, flush=True)
+
+    with open(options.outfile,"wt",encoding="utf8") as out:
+
+        filenames = []
+
+        for file in options.bamfiles:
+            filenames.append(Path(file).name)
+
+        # Write the headers
+        headers = ["Locus"]
+        for file in filenames:
+            headers.append(file+" Total")
+            headers.append(file+" Transformed")
+
+        print("\t".join(headers), file=out)
+
+        for locus in quantitations:
+            line = [locus]
+
+            for file in filenames:
+                if file in quantitations[locus]:
+                    line.extend(quantitations[locus])
+
+                else:
+                    line.extend([0,0])
+
+            line = [str(x) for x  in line]
+
+            print("\t".join(line), file=out)
 
 
 def process_bamfile(file,quantitations):
+
+    print("Processing",file.name, flush=True)
+
     bamin = pysam.AlignmentFile(file, "rb")
 
     for i,read in enumerate(bamin.fetch(until_eof=True)):
