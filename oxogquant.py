@@ -28,8 +28,7 @@ def main():
 
 def write_output(quantitations):
 
-    print("Writing output to ",options.outfile, flush=True)
-
+    print("Writing output to",options.outfile, flush=True)
     with open(options.outfile,"wt",encoding="utf8") as out:
 
         filenames = []
@@ -50,7 +49,7 @@ def write_output(quantitations):
 
             for file in filenames:
                 if file in quantitations[locus]:
-                    line.extend(quantitations[locus])
+                    line.extend(quantitations[locus][file])
 
                 else:
                     line.extend([0,0])
@@ -70,7 +69,7 @@ def process_bamfile(file,quantitations):
 
         if i>0 and i % 100000 == 0:
             print(f"Read {i} reads", flush=True)
-            break ##### JUST TESTING ########
+            # break ##### JUST TESTING ########
         
 
         # We need to figure out the direction we're looking in
